@@ -180,15 +180,19 @@ GeomInteractiveFlow <- ggplot2::ggproto(
       #   )
       # )
 
-      grob<-grob_polygon#grob <- grid::grobTree(grob_polygon, grob_lines)
-                           CVVCAQA    # combine spline grobs
+    grob<-grob_polygon#grob <- grid::grobTree(grob_polygon, grob_lines)
+    #grob <- ggiraph:::add_interactive_attrs(grob, data, data_attr = "key-id", ipar = ggiraph:::get_ipar(panel_params))
+    grob
+  })
+
+    # combine spline grobs
     grob <- do.call(grid::grobTree, grobs)
     grob$name <- grid::grobName(grob, "geom_flow")
 
     grob <- ggiraph:::add_interactive_attrs(grob, data, data_attr = "key-id", ipar = .ipar)
 
     grob
-  },
+    },
 
   draw_key = ggiraph:::interactive_geom_draw_key,
 
