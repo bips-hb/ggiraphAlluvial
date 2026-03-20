@@ -3,7 +3,7 @@
 #' @title Strata at axes
 #'
 #' @description
-#' This geometry is based on [geom_stratum()].
+#' This geometry is based on [ggalluvial::geom_stratum()].
 #' See the documentation for those functions for more details.
 #'
 #' @param ... arguments passed to base function,
@@ -15,7 +15,7 @@
 #' #...
 #' #x <- girafe(ggobj = p)
 #' if (interactive()) print(x)
-#' @seealso [girafe()]
+#' @seealso [ggiraph::girafe()]
 #' @export
 geom_stratum_interactive <- function(...) ggiraph:::layer_interactive(ggalluvial::geom_stratum, ...)
 

@@ -1,0 +1,231 @@
+---
+title: "Getting started with ggiraphAlluvial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with ggiraphAlluvial}
+  \usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+# Overview
+
+`ggiraphAlluvial` provides interactive alluvial geoms for use with
+`ggplot2`, `ggalluvial`, and `ggiraph`.
+
+The package is designed for situations where a regular alluvial plot is
+useful, but the viewer also benefits from interactive features such as:
+
+-   tooltips
+
+-   hover highlighting
+
+-   click actions
+
+# Installation
+
+You can install the development version from your local source or
+GitHub.
+
+```{r eval=FALSE}
+# install.packages("pak")
+pak::pak("bips-hb/ggiraphAlluvial")
+```
+
+# Packages used in this vignette
+
+```{r}
+library(ggplot2)
+library(ggalluvial)
+library(ggiraph)
+library(ggiraphAlluvial)
+```
+
+# A basic alluvial plot
+
+We start with a small example data set from `ggalluvial`.
+
+```{r}
+data("Titanic")
+
+df <- as.data.frame(Titanic)
+head(df)
+```
+
+A standard alluvial plot with `ggalluvial` might look like this:
+
+```{r}
+p_static <- ggplot(
+  df, 
+  aes(
+    axis1 = Class,
+    axis2 = Sex,
+    axis3 = Age,
+    y = Freq
+    )
+  ) +
+  ggalluvial::geom_alluvium(aes(fill = Survived)) +
+  ggalluvial::geom_stratum() +
+  ggplot2::geom_text(stat = "stratum", aes(label = after_stat(stratum))) +
+  scale_x_discrete(limits = c("Class", "Sex", "Age"), expand = c(.1, .1)) +
+  labs(
+    title = "Titanic data as an alluvial plot",
+    y = "Count"
+  )
+
+p_static
+```
+
+# Making the plot interactive
+
+`ggiraphAlluvial` adds interactive versions of selected `ggalluvial`
+geoms.
+
+In the example below, tooltips are attached to flows and strata.
+Hovering over elements in the rendered widget reveals those tooltips.
+
+```{r}
+p_interactive <- ggplot(
+  df,
+  aes(
+    axis1 = Class,
+    axis2 = Sex,
+    axis3 = Age,
+    y = Freq
+  )
+) +
+  geom_flow_interactive(
+    aes(
+      fill = Survived,
+      tooltip = paste(
+        "Class:", Class,
+        "<br>Sex:", Sex,
+        "<br>Age:", Age,
+        "<br>Survived:", Survived,
+        "<br>Count:", Freq
+      ),
+      data_id = paste(Class, Sex, Age, Survived, sep = "_")
+    ),
+    alpha = 0.7
+  ) +
+  geom_stratum_interactive(
+    aes(
+      tooltip = after_stat(stratum),
+      data_id = after_stat(stratum)
+    ),
+    fill = "grey85",
+    color = "grey40"
+  ) +
+  ggplot2::geom_text(
+    stat = "stratum",
+    aes(label = after_stat(stratum))
+  ) +
+  scale_x_discrete(limits = c("Class", "Sex", "Age"), expand = c(.1, .1)) +
+  labs(
+    title = "Interactive alluvial plot",
+    y = "Count"
+  )
+
+girafe(ggobj = p_interactive)
+```
+
+# Tooltips and hover effects
+
+Interactive behaviour is controlled through aesthetics recognized by
+`ggiraph`, such as `tooltip` and `data_id`, and through options passed
+to `girafe()`.
+
+```{r}
+girafe(
+  ggobj = p_interactive,
+  options = list(
+    opts_hover(css = "stroke:black;stroke-width:2px;"),
+    opts_tooltip(css = "background-color:white;color:black;padding:6px;border:1px solid #ccc;")
+  )
+)
+```
+
+# A richer example
+
+Interactive alluvial plots are particularly useful when the number of
+flows grows and a static display becomes harder to read.
+
+```{r}
+df2 <- subset(df, Freq > 0)
+
+p2 <- ggplot(
+  df2,
+  aes(
+    axis1 = Class,
+    axis2 = Sex,
+    axis3 = Age,
+    y = Freq
+  )
+) +
+  geom_flow_interactive(
+    aes(
+      fill = Survived,
+      tooltip = paste0(
+        "Class: ", Class,
+        "<br>Sex: ", Sex,
+        "<br>Age: ", Age,
+        "<br>Survived: ", Survived,
+        "<br>Freq: ", Freq
+      ),
+      data_id = seq_len(nrow(df2))
+    )
+  ) +
+  geom_stratum_interactive(
+    aes(
+      tooltip = after_stat(stratum),
+      data_id = after_stat(stratum)
+    ),
+    fill = "grey90",
+    color = "grey50"
+  ) +
+  scale_x_discrete(limits = c("Class", "Sex", "Age"), expand = c(.1, .1)) +
+  labs(
+    title = "Interactive exploration of Titanic flows",
+    fill = "Survived"
+  )
+
+girafe(
+  ggobj = p2,
+  options = list(
+    opts_hover(css = "opacity:1;stroke:black;"),
+    opts_hover_inv(css = "opacity:0.25;")
+  )
+)
+```
+
+# Notes
+
+`ggiraphAlluvial` is intended to work alongside `ggalluvial` rather than
+replace it. The usual `ggplot2` workflow still applies: build a plot
+with regular layer semantics, then render it with `ggiraph::girafe()`.
+
+In general, interactive alluvial plots work best when:
+
+-   each element has a meaningful tooltip
+
+-   each interactive element has a stable data_id
+
+-   labels are kept short enough to remain readable
+
+# Summary
+
+`ggiraphAlluvial` makes it possible to add interactivity to alluvial
+plots without changing the overall `ggplot2` workflow. This is
+especially useful for exploratory graphics, dashboards, and teaching
+materials.

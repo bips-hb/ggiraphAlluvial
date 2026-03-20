@@ -5,7 +5,7 @@
 #'
 #'
 #' This function binds a dataset to itself along adjacent pairs of a `key`
-#' variable. It is invoked by [geom_flow()] to convert data in lodes
+#' variable. It is invoked by [ggalluvial::geom_flow()] to convert data in lodes
 #' form to something similar to alluvia form.
 #'
 #' In contrast to ggalluvial::self_adjoin it also works with unregular coloumn names,

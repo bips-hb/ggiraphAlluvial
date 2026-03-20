@@ -11,7 +11,7 @@ geom_flow_interactive(...)
 plus any of the interactive_parameters.}
 }
 \description{
-This geometry is based on \code{\link[=geom_flow]{geom_flow()}}.
+This geometry is based on \code{\link[ggalluvial:geom_flow]{ggalluvial::geom_flow()}}.
 See the documentation for those functions for more details.
 }
 \examples{
@@ -23,5 +23,5 @@ library(ggiraph)
 if (interactive()) print(x)
 }
 \seealso{
-\code{\link[=girafe]{girafe()}}
+\code{\link[ggiraph:girafe]{ggiraph::girafe()}}
 }

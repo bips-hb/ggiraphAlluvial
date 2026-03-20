@@ -3,7 +3,7 @@
 #' @title Flows between lodes or strata
 #'
 #' @description
-#' This geometry is based on [geom_flow()].
+#' This geometry is based on [ggalluvial::geom_flow()].
 #' See the documentation for those functions for more details.
 #'
 #' @param ... arguments passed to base function,
@@ -15,8 +15,9 @@
 #' #...
 #' #x <- girafe(ggobj = p)
 #' if (interactive()) print(x)
-#' @seealso [girafe()]
+#' @seealso [ggiraph::girafe()]
 #' @export
+#' @importFrom ggplot2 layer ggproto aes
 geom_flow_interactive <- function(...) {
   ggiraph:::layer_interactive(ggalluvial::geom_flow, ...)
 }
