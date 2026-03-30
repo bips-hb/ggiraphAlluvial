@@ -4,7 +4,7 @@
 ##' @title Two helpers to select stratum connected to a flow
 ##'
 ##' @param x usually the .data pronoun
-##' @param y ="stratum", the value that should be returned, e.g. "stratum" or "x"
+##' @param value ="stratum", the value that should be returned, e.g. "stratum" or "x"
 ##'
 ##' @return value mapped to the left (from) or right (to) side of the alluvium.
 NULL
