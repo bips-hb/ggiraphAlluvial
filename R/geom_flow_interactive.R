@@ -19,27 +19,8 @@
 #' @export
 #' @importFrom ggplot2 layer ggproto aes
 geom_flow_interactive <- function(...) {
-  ggiraph:::layer_interactive(ggalluvial::geom_flow, ...)
+  ggiraph_internal("layer_interactive")(ggalluvial::geom_flow, ...) #ggiraph:::layer_interactive(ggalluvial::geom_flow, ...)
 }
-#
-# geom_flow_interactive <- function(...) {
-#   ggiraph:::layer_interactive(
-#     function (mapping = NULL, data = NULL, stat = "flow", position = "identity",
-#               width = 1/3, knot.pos = 1/4, knot.prop = TRUE, curve_type = NULL,
-#               curve_range = NULL, segments = NULL, aes.flow = "forward",
-#               na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, ...)
-#     {
-#       browser()
-#       aes.flow <- match.arg(aes.flow, c("forward", "backward"))
-#       layer(geom = GeomFlow, mapping = mapping, data = data, stat = stat,
-#             position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-#             params = list(width = width, knot.pos = knot.pos, knot.prop = knot.prop,
-#                           curve_type = curve_type, curve_range = curve_range,
-#                           segments = segments, aes.flow = aes.flow, na.rm = na.rm,
-#                           ...))
-#     },
-#     ...)
-# }
 
 #' @title ggproto class for ggiraph
 #'
@@ -56,8 +37,10 @@ GeomInteractiveFlow <- ggplot2::ggproto(
 
   required_aes = c("x", "y", "ymin", "ymax"),
 
-  default_aes = ggiraph:::add_default_interactive_aes(ggalluvial::GeomFlow),
-  parameters = ggiraph:::interactive_geom_parameters,
+  #default_aes = ggiraph:::add_default_interactive_aes(ggalluvial::GeomFlow),
+  #parameters = ggiraph:::interactive_geom_parameters,
+  default_aes = ggiraph_internal("add_default_interactive_aes")(ggalluvial::GeomFlow),
+  parameters = ggiraph_internal("interactive_geom_parameters"),
 
   #setup_params = function(data, params) {
   #  #if (is.function(params$tooltip)) {
@@ -190,12 +173,16 @@ GeomInteractiveFlow <- ggplot2::ggproto(
     grob <- do.call(grid::grobTree, grobs)
     grob$name <- grid::grobName(grob, "geom_flow")
 
-    grob <- ggiraph:::add_interactive_attrs(grob, data, data_attr = "key-id", ipar = .ipar)
+    #grob <- ggiraph:::add_interactive_attrs(grob, data, data_attr = "key-id", ipar = .ipar)
+    grob <- ggiraph_internal("add_interactive_attrs")(
+      grob, data, data_attr = "key-id", ipar = .ipar
+    )
 
     grob
     },
 
-  draw_key = ggiraph:::interactive_geom_draw_key,
+  #draw_key = ggiraph:::interactive_geom_draw_key,
+  draw_key = ggiraph_internal("interactive_geom_draw_key"),
 
   non_missing_aes = "size",
   rename_size = TRUE

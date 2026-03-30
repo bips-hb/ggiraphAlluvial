@@ -17,7 +17,10 @@
 #' if (interactive()) print(x)
 #' @seealso [ggiraph::girafe()]
 #' @export
-geom_stratum_interactive <- function(...) ggiraph:::layer_interactive(ggalluvial::geom_stratum, ...)
+#geom_stratum_interactive <- function(...) ggiraph:::layer_interactive(ggalluvial::geom_stratum, ...)
+geom_stratum_interactive <- function(...) {
+  ggiraph_internal("layer_interactive")(ggalluvial::geom_stratum, ...)
+}
 
 #' @title ggproto class for ggiraph
 #'
@@ -35,8 +38,10 @@ GeomInteractiveStratum <- ggplot2::ggproto(
 
   required_aes = c("x", "y", "ymin", "ymax"),
 
-  default_aes = ggiraph:::add_default_interactive_aes(ggalluvial::GeomStratum),
-  parameters = ggiraph:::interactive_geom_parameters,
+  #default_aes = ggiraph:::add_default_interactive_aes(ggalluvial::GeomStratum),
+  #parameters = ggiraph:::interactive_geom_parameters,
+  default_aes = ggiraph_internal("add_default_interactive_aes")(ggalluvial::GeomStratum),
+  parameters = ggiraph_internal("interactive_geom_parameters"),
 
   setup_data = function(data, params) {
 

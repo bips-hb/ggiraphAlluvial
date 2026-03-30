@@ -13,7 +13,7 @@ stratum_from(x, value = "stratum")
 \arguments{
 \item{x}{usually the .data pronoun}
 
-\item{y}{="stratum", the value that should be returned, e.g. "stratum" or "x"}
+\item{value}{="stratum", the value that should be returned, e.g. "stratum" or "x"}
 }
 \value{
 value mapped to the left (from) or right (to) side of the alluvium.
